@@ -105,6 +105,212 @@ tailwind.config = {
     }
   }
 
+  /* ═══════════════════════════════════════════════════════════════════════
+     MOBILE HERO — editorial layered composition
+     Portrait + ONKAR background + side cards
+     Applied only at ≤767px. Desktop (lg:) untouched.
+  ═══════════════════════════════════════════════════════════════════════ */
+  @media (max-width: 767px) {
+
+    /* 1. Hero section: reduce min-height to actual content height */
+    #home {
+      min-height: auto !important;
+    }
+
+    /* 2. Hero stage outer wrapper: reduce top padding so ONKAR sits near top */
+    #home > div.max-w-\[1480px\] {
+      padding-top: 12px !important;
+      padding-bottom: 16px !important;
+    }
+
+    /* 3. The inner grid: switch to relative positioning context.
+          Remove the stacked column flow — we overlay cards on the portrait. */
+    #home .grid.grid-cols-1 {
+      display: block !important;
+      position: relative !important;
+      min-height: auto !important;
+      /* height driven by portrait column */
+    }
+
+    /* 4. ONKAR heading: push it down into portrait overlap zone */
+    #home > div.subtle-grid ~ div,
+    #home .absolute.inset-x-0 {
+      top: 0 !important;
+    }
+    /* ONKAR vw text: make it fill viewport width boldly */
+    #home h1 {
+      font-size: clamp(4rem, 22vw, 8rem) !important;
+    }
+
+    /* 5. Portrait column: full width, centered, sets the block height */
+    #home .order-1.lg\\:order-2 {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: flex-end !important;
+      width: 100% !important;
+      position: relative !important;
+      z-index: 10 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    #home .order-1.lg\\:order-2 .relative.w-full {
+      max-width: 100% !important;
+    }
+
+    /* Portrait height on mobile hero composition */
+    #hero-portrait {
+      height: 360px !important;
+      width: auto !important;
+      max-width: 100% !important;
+    }
+
+    /* 6. LEFT INFO CARD: absolutely positioned left side, vertically centered */
+    #home .order-2.lg\\:order-1 {
+      position: absolute !important;
+      left: 0 !important;
+      top: 50% !important;
+      transform: translateY(-40%) !important;
+      z-index: 20 !important;
+      width: 42% !important;
+      max-width: 160px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    /* Scale down the card itself */
+    #home .order-2.lg\\:order-1 > div {
+      padding: 10px !important;
+      border-radius: 10px !important;
+      max-width: 100% !important;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10) !important;
+    }
+
+    /* Compact the badge */
+    #home .order-2.lg\\:order-1 .inline-flex.items-center.gap-2.px-2\\.5 {
+      font-size: 7px !important;
+      padding: 3px 6px !important;
+      margin-bottom: 6px !important;
+    }
+
+    /* Compact the heading */
+    #home .order-2.lg\\:order-1 h2 {
+      font-size: 8.5px !important;
+      line-height: 1.3 !important;
+    }
+
+    /* Compact the bullet list */
+    #home .order-2.lg\\:order-1 .mt-5.pt-5 {
+      margin-top: 6px !important;
+      padding-top: 6px !important;
+      gap: 3px !important;
+    }
+    #home .order-2.lg\\:order-1 .mt-5.pt-5 > div {
+      font-size: 7px !important;
+      gap: 3px !important;
+    }
+
+    /* Hide explore portfolio + year row on mobile — saves space */
+    #home .order-2.lg\\:order-1 .mt-6.pt-4 {
+      display: none !important;
+    }
+
+    /* 7. RIGHT STAT CARDS: absolutely positioned right side */
+    #home .order-3 {
+      position: absolute !important;
+      right: 0 !important;
+      top: 50% !important;
+      transform: translateY(-40%) !important;
+      z-index: 20 !important;
+      width: 38% !important;
+      max-width: 145px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 5px !important;
+      align-items: flex-end !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    /* All stat cards: compact */
+    #home .order-3 > div {
+      width: 100% !important;
+      padding: 8px 10px !important;
+      border-radius: 10px !important;
+    }
+
+    /* Stat number sizes */
+    #home .order-3 .font-display.text-4xl,
+    #home .order-3 .font-display.text-5xl {
+      font-size: 22px !important;
+      line-height: 1 !important;
+    }
+    #home .order-3 .font-display.text-3xl {
+      font-size: 18px !important;
+      line-height: 1 !important;
+    }
+
+    /* Sub-labels inside stat cards */
+    #home .order-3 .font-mono-code.text-\\[11px\\] {
+      font-size: 7.5px !important;
+    }
+
+    /* Hide the "React · Python · PyTorch" subtitle lines — save vertical space */
+    #home .order-3 p.mt-1 {
+      display: none !important;
+    }
+
+    /* Hide the AI · ML · FULL STACK pill on mobile (redundant at this scale) */
+    #home .order-3 .inline-flex.items-center.gap-2.px-4 {
+      display: none !important;
+    }
+
+    /* 8. Bottom stroke text: scale for mobile */
+    #home .stroke-text {
+      white-space: normal !important;
+      font-size: clamp(1.4rem, 9vw, 2.5rem) !important;
+      margin-top: 8px !important;
+    }
+
+    /* 9. Prevent horizontal overflow */
+    #home {
+      overflow-x: hidden !important;
+    }
+  }
+
+  /* Extra-narrow phones (≤390px): tighten portrait and cards slightly */
+  @media (max-width: 390px) {
+    #hero-portrait {
+      height: 310px !important;
+    }
+    #home .order-2.lg\\:order-1 {
+      max-width: 145px !important;
+    }
+    #home .order-3 {
+      max-width: 130px !important;
+    }
+  }
+
+  /* Smallest phones (≤359px) */
+  @media (max-width: 359px) {
+    #hero-portrait {
+      height: 270px !important;
+    }
+    #home .order-2.lg\\:order-1 {
+      max-width: 130px !important;
+    }
+    #home .order-3 {
+      max-width: 118px !important;
+    }
+    #home .order-3 .font-display.text-4xl,
+    #home .order-3 .font-display.text-5xl {
+      font-size: 18px !important;
+    }
+    #home .order-3 .font-display.text-3xl {
+      font-size: 15px !important;
+    }
+  }
+
   /* ── HERO: stroke text — whitespace-nowrap causes horizontal overflow ── */
   @media (max-width: 1023px) {
     #home .stroke-text {
