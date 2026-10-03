@@ -60,8 +60,8 @@ tailwind.config = {
   ::-webkit-scrollbar-track { background: #F5F0E6; }
   ::-webkit-scrollbar-thumb { background: #D5CEBE; border-radius: 9999px; }
   ::-webkit-scrollbar-thumb:hover { background: #141413; }
-  .service-body { display: none; }
-  .service-body.open { display: block; }
+  .service-body { display: block; height: 0; overflow: hidden; opacity: 0; }
+  .service-body.open { height: auto; opacity: 1; }
 </style>
 </head>
 <body class="bg-[#FAF7F2] text-[#141413] antialiased relative min-h-screen">
@@ -1260,5 +1260,393 @@ revealEls.forEach(el => {
   observer.observe(el);
 });
 </script>
+
+<!-- ===== GSAP + ScrollTrigger ===== -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+<!-- ===== SCROLL PROGRESS BAR ===== -->
+<div id="scroll-progress" style="position:fixed;top:0;left:0;height:2px;width:0%;background:#141413;z-index:9999;pointer-events:none;"></div>
+
+<!-- ===== ANIMATIONS ===== -->
+<script>
+(function () {
+  /* ─── scroll progress (pure CSS transition, no GSAP needed) ───────────── */
+  const bar = document.getElementById('scroll-progress');
+  window.addEventListener('scroll', function () {
+    var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+    bar.style.width = Math.min(pct, 100) + '%';
+  }, { passive: true });
+
+  /* ─── prefers-reduced-motion: skip all animation ──────────────────────── */
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  /* ─── wait for GSAP to load ───────────────────────────────────────────── */
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  var E1 = 'power3.out';
+  var E2 = 'power2.out';
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     SAFE REVEAL HELPER
+     Uses gsap.fromTo so the end-state (opacity:1, y:0) is always explicit.
+     clearProps:'transform,opacity' ensures element is fully visible after.
+  ═══════════════════════════════════════════════════════════════════════ */
+  function sr(targets, fromVars, dur, delay, triggerEl, startPos) {
+    var nodes = typeof targets === 'string' ? document.querySelectorAll(targets) : targets;
+    if (!nodes || (nodes.length !== undefined && nodes.length === 0)) return;
+    var toVars = {
+      opacity: 1, y: 0, x: 0, scale: 1,
+      duration: dur || 0.6,
+      delay: delay || 0,
+      ease: E1,
+      clearProps: 'transform,opacity,filter',
+      scrollTrigger: {
+        trigger: triggerEl || (typeof targets === 'string' ? targets : nodes[0]),
+        start: startPos || 'top 88%',
+        toggleActions: 'play none none none',
+        once: true
+      }
+    };
+    /* merge fromVars into toVars for scrollTrigger, build fromTo */
+    gsap.fromTo(nodes,
+      Object.assign({ opacity: 0, y: 20 }, fromVars),
+      toVars
+    );
+  }
+
+  function srStagger(targets, fromVars, dur, staggerAmt, triggerEl, startPos) {
+    var nodes = typeof targets === 'string' ? document.querySelectorAll(targets) : targets;
+    if (!nodes || nodes.length === 0) return;
+    gsap.fromTo(nodes,
+      Object.assign({ opacity: 0, y: 20 }, fromVars),
+      {
+        opacity: 1, y: 0, x: 0, scale: 1,
+        duration: dur || 0.55,
+        stagger: staggerAmt || 0.07,
+        ease: E2,
+        clearProps: 'transform,opacity,filter',
+        scrollTrigger: {
+          trigger: triggerEl || (typeof targets === 'string' ? targets : nodes[0]),
+          start: startPos || 'top 88%',
+          toggleActions: 'play none none none',
+          once: true
+        }
+      }
+    );
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     01 — HERO ENTRANCE  (fires on load, not on scroll)
+  ═══════════════════════════════════════════════════════════════════════ */
+  var header   = document.getElementById('site-header');
+  var heroH1   = document.querySelector('#home h1');
+  var portrait = document.getElementById('hero-portrait');
+  var infoCard = document.querySelector('#home .order-2.lg\\:order-1');
+  var statCol  = document.querySelector('#home .order-3');
+  var strokeTx = document.querySelector('#home .stroke-text');
+
+  /* Only set initial state on elements we know exist */
+  if (header)   gsap.set(header,   { y: -60, opacity: 0 });
+  if (heroH1)   gsap.set(heroH1,   { y: 24, opacity: 0, scale: 0.97 });
+  if (portrait) gsap.set(portrait, { y: 60, opacity: 0 });
+  if (infoCard) gsap.set(infoCard, { x: -45, opacity: 0 });
+  if (statCol)  gsap.set(statCol,  { x: 45,  opacity: 0 });
+  if (strokeTx) gsap.set(strokeTx, { clipPath: 'inset(0 100% 0 0)' });
+
+  var tl = gsap.timeline({ defaults: { ease: E1 } });
+
+  if (header)   tl.to(header,   { y: 0, opacity: 1, duration: 0.6 });
+  if (heroH1)   tl.to(heroH1,   { y: 0, opacity: 0.96, scale: 1, duration: 0.85 }, '-=0.2');
+  if (portrait) tl.to(portrait, { y: 0, opacity: 1, duration: 0.9, ease: 'circ.out' }, '-=0.55');
+  if (infoCard) tl.to(infoCard, { x: 0, opacity: 1, duration: 0.7 }, '-=0.6');
+  if (statCol) {
+    var statItems = statCol.querySelectorAll(':scope > *');
+    if (statItems.length) {
+      tl.to(statItems, { x: 0, opacity: 1, duration: 0.55, stagger: 0.1 }, '-=0.6');
+    } else {
+      tl.to(statCol, { x: 0, opacity: 1, duration: 0.6 }, '-=0.6');
+    }
+  }
+  if (strokeTx) tl.to(strokeTx, { clipPath: 'inset(0 0% 0 0)', duration: 0.8, ease: 'power2.inOut', clearProps: 'clipPath' }, '-=0.3');
+
+  /* ─── Hero subtle parallax on scroll (scrub, very small range) ─────── */
+  if (heroH1) {
+    gsap.to(heroH1, {
+      y: -35, ease: 'none',
+      scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: 2 }
+    });
+  }
+  if (portrait) {
+    gsap.to(portrait, {
+      y: -20, ease: 'none',
+      scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: 2.5 }
+    });
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     02 — ABOUT
+  ═══════════════════════════════════════════════════════════════════════ */
+  /* section label */
+  var aboutLine = document.querySelector('#about .w-8');
+  if (aboutLine) {
+    gsap.fromTo(aboutLine,
+      { scaleX: 0 },
+      { scaleX: 1, duration: 0.5, ease: E2, transformOrigin: 'left',
+        clearProps: 'transform',
+        scrollTrigger: { trigger: '#about', start: 'top 86%', toggleActions: 'play none none none', once: true } }
+    );
+  }
+
+  /* heading */
+  sr('#about .lg\\:col-span-7 h2',   { y: 35, opacity: 0 }, 0.75, 0,    '#about', 'top 84%');
+
+  /* paragraphs — target only direct children of the text space-y-4, not all p in section */
+  var aboutParas = document.querySelectorAll('#about .lg\\:col-span-7 .space-y-4.text-\\[\\#4A4944\\] p');
+  if (!aboutParas.length) aboutParas = document.querySelectorAll('#about .lg\\:col-span-7 .space-y-4 p');
+  srStagger(aboutParas, { y: 22, opacity: 0 }, 0.55, 0.09, '#about .lg\\:col-span-7', 'top 80%');
+
+  /* competency tags */
+  var tags = document.querySelectorAll('#about .flex.flex-wrap.gap-2 span');
+  srStagger(tags, { scale: 0.9, opacity: 0, y: 0 }, 0.4, 0.05, '#about .pt-4', 'top 88%');
+
+  /* right column cards */
+  var rightCards = document.querySelectorAll('#about .lg\\:col-span-5 > div');
+  srStagger(rightCards, { x: 45, opacity: 0, y: 0 }, 0.65, 0.12, '#about .lg\\:col-span-5', 'top 84%');
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     03 — SERVICES
+  ═══════════════════════════════════════════════════════════════════════ */
+  sr('#services h2', { y: 30, opacity: 0 }, 0.7, 0, '#services', 'top 84%');
+
+  /* alternating left/right service cards */
+  var svcCards = document.querySelectorAll('.service-card');
+  svcCards.forEach(function (card, i) {
+    gsap.fromTo(card,
+      { x: i % 2 === 0 ? -50 : 50, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.65, ease: E1,
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none none', once: true } }
+    );
+  });
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     04 — PROJECTS
+  ═══════════════════════════════════════════════════════════════════════ */
+  sr('#projects h2', { y: 30, opacity: 0 }, 0.7, 0, '#projects', 'top 84%');
+
+  var projCards = document.querySelectorAll('.project-card');
+  projCards.forEach(function (card, i) {
+    gsap.fromTo(card,
+      { y: 40, opacity: 0, scale: 0.97 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.65, ease: E1,
+        delay: i * 0.07,
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: card, start: 'top 92%', toggleActions: 'play none none none', once: true } }
+    );
+  });
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     05 — SKILLS
+  ═══════════════════════════════════════════════════════════════════════ */
+  sr('#skills h2', { y: 28, opacity: 0 }, 0.65, 0, '#skills', 'top 86%');
+
+  var filterBtns = document.querySelectorAll('#skills-filter button');
+  srStagger(filterBtns, { y: 15, opacity: 0 }, 0.45, 0.06, '#skills-filter', 'top 90%');
+
+  /* skill items: modest scale, small stagger, grouped trigger */
+  var skillItems = document.querySelectorAll('.skill-item');
+  gsap.fromTo(skillItems,
+    { opacity: 0, y: 18, scale: 0.96 },
+    { opacity: 1, y: 0,  scale: 1,
+      duration: 0.45,
+      stagger: { each: 0.03, from: 'start' },
+      ease: E2,
+      clearProps: 'transform,opacity',
+      scrollTrigger: { trigger: '#skills-grid', start: 'top 86%', toggleActions: 'play none none none', once: true } }
+  );
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     06 — CONTACT
+  ═══════════════════════════════════════════════════════════════════════ */
+  sr('#contact h2', { y: 45, opacity: 0 }, 0.8, 0, '#contact', 'top 84%');
+  sr('#contact .lg\\:col-span-5 > div > p', { y: 20, opacity: 0 }, 0.55, 0.15, '#contact', 'top 82%');
+
+  /* contact info cards – use index for alternating direction safely */
+  var cInfoCards = document.querySelectorAll('#contact .space-y-4 > a, #contact .space-y-4 > div');
+  cInfoCards.forEach(function (el, i) {
+    gsap.fromTo(el,
+      { x: i % 2 === 0 ? -35 : 35, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.55, ease: E1,
+        delay: i * 0.08,
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: '#contact .space-y-4', start: 'top 88%', toggleActions: 'play none none none', once: true } }
+    );
+  });
+
+  /* form right column */
+  sr('#contact .lg\\:col-span-7', { x: 40, opacity: 0, y: 0 }, 0.7, 0.1, '#contact .lg\\:col-span-7', 'top 88%');
+
+  /* form fields stagger */
+  var formRows = document.querySelectorAll('#contact-form > div, #contact-form > button, #contact-form > div.grid > div');
+  srStagger(formRows, { y: 18, opacity: 0 }, 0.45, 0.07, '#contact-form', 'top 90%');
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     07 — FOOTER
+  ═══════════════════════════════════════════════════════════════════════ */
+  var footerTop = document.querySelector('footer .flex.flex-col.md\\:flex-row');
+  if (!footerTop) footerTop = document.querySelector('footer .border-b');
+  if (footerTop) {
+    gsap.fromTo(footerTop,
+      { y: 25, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.65, ease: E1, clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: 'footer', start: 'top 92%', toggleActions: 'play none none none', once: true } }
+    );
+  }
+
+  /* watermark: simple reveal + gentle parallax scrub */
+  var watermark = document.querySelector('footer h2');
+  if (watermark) {
+    gsap.fromTo(watermark,
+      { y: 50, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.9, ease: E2, clearProps: 'opacity',
+        scrollTrigger: { trigger: 'footer', start: 'top 95%', toggleActions: 'play none none none', once: true } }
+    );
+    gsap.to(watermark, {
+      y: -20, ease: 'none',
+      scrollTrigger: { trigger: 'footer', start: 'top bottom', end: 'bottom top', scrub: 2.5 }
+    });
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     08 — SERVICE ACCORDION  (smooth height animation)
+  ═══════════════════════════════════════════════════════════════════════ */
+  window.toggleService = function (id) {
+    var body  = document.getElementById('service-body-' + id);
+    var arrow = document.getElementById('arrow-' + id);
+    if (!body) return;
+
+    /* close previously open one */
+    if (window._openSvc && window._openSvc !== id) {
+      var prevBody  = document.getElementById('service-body-' + window._openSvc);
+      var prevArrow = document.getElementById('arrow-' + window._openSvc);
+      if (prevBody && prevBody.classList.contains('open')) {
+        var prevH = prevBody.scrollHeight;
+        gsap.fromTo(prevBody,
+          { height: prevH, opacity: 1 },
+          { height: 0, opacity: 0, duration: 0.32, ease: E2, clearProps: 'height',
+            onComplete: function () { prevBody.classList.remove('open'); } }
+        );
+        if (prevArrow) gsap.to(prevArrow, { rotation: 0, duration: 0.3, ease: E2 });
+      }
+    }
+
+    if (body.classList.contains('open')) {
+      /* close */
+      var h = body.scrollHeight;
+      gsap.fromTo(body,
+        { height: h, opacity: 1 },
+        { height: 0, opacity: 0, duration: 0.32, ease: E2, clearProps: 'height',
+          onComplete: function () { body.classList.remove('open'); } }
+      );
+      if (arrow) gsap.to(arrow, { rotation: 0, duration: 0.3, ease: E2 });
+      window._openSvc = null;
+    } else {
+      /* open */
+      body.classList.add('open');
+      var target = body.scrollHeight;
+      gsap.fromTo(body,
+        { height: 0, opacity: 0 },
+        { height: target, opacity: 1, duration: 0.38, ease: E1,
+          onComplete: function () { body.style.height = 'auto'; } }
+      );
+      if (arrow) gsap.to(arrow, { rotation: 180, duration: 0.32, ease: E2 });
+      window._openSvc = id;
+    }
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     09 — MODAL  (smooth enter / exit)
+  ═══════════════════════════════════════════════════════════════════════ */
+  var _origOpen  = window.openCaseStudy;
+  var _origClose = window.closeCaseStudy;
+
+  window.openCaseStudy = function (id) {
+    _origOpen(id);
+    var modal     = document.getElementById('case-study-modal');
+    var container = modal.querySelector('.relative.w-full');
+    if (!modal || !container) return;
+    gsap.fromTo(modal,     { opacity: 0 }, { opacity: 1, duration: 0.25, ease: E2 });
+    gsap.fromTo(container, { y: 36, scale: 0.95, opacity: 0 },
+                           { y: 0,  scale: 1,    opacity: 1, duration: 0.38, ease: E1, delay: 0.08 });
+    var items = container.querySelectorAll('.space-y-8 > *');
+    if (items.length) {
+      gsap.fromTo(items, { y: 14, opacity: 0 },
+                         { y: 0, opacity: 1, duration: 0.35, stagger: 0.06, ease: E1, delay: 0.2,
+                           clearProps: 'transform,opacity' });
+    }
+  };
+
+  window.closeCaseStudy = function () {
+    var modal     = document.getElementById('case-study-modal');
+    var container = modal ? modal.querySelector('.relative.w-full') : null;
+    if (container) gsap.to(container, { y: 24, scale: 0.96, opacity: 0, duration: 0.25, ease: E2 });
+    if (modal)     gsap.to(modal, { opacity: 0, duration: 0.28, ease: E2, delay: 0.1,
+                                    onComplete: function () {
+                                      _origClose();
+                                      if (modal) { modal.style.opacity = ''; }
+                                      if (container) { gsap.set(container, { clearProps: 'all' }); }
+                                    } });
+  };
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     10 — HOVER lifts  (GSAP, GPU-only)
+  ═══════════════════════════════════════════════════════════════════════ */
+  function addLift(sel, upY) {
+    document.querySelectorAll(sel).forEach(function (el) {
+      el.addEventListener('mouseenter', function () { gsap.to(el, { y: -upY, duration: 0.2, ease: E2 }); });
+      el.addEventListener('mouseleave', function () { gsap.to(el, { y: 0,    duration: 0.2, ease: E2 }); });
+    });
+  }
+  addLift('.project-card', 5);
+  addLift('.skill-item',   3);
+  addLift('.service-card', 3);
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     11 — MOBILE  (kill parallax scrubs on small screens)
+  ═══════════════════════════════════════════════════════════════════════ */
+  if (window.innerWidth < 768) {
+    ScrollTrigger.getAll().forEach(function (st) {
+      if (st.vars && st.vars.scrub) st.kill();
+    });
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     12 — SAFETY NET
+     After all animations should have fired, force-clear any element
+     still at opacity:0 so content is never permanently hidden.
+  ═══════════════════════════════════════════════════════════════════════ */
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      var candidates = document.querySelectorAll(
+        '#about *, #services *, #projects *, #skills *, #contact *, footer *'
+      );
+      candidates.forEach(function (el) {
+        var st = window.getComputedStyle(el);
+        if (parseFloat(st.opacity) < 0.05 && st.display !== 'none') {
+          el.style.opacity = '';
+          el.style.transform = '';
+          el.style.visibility = '';
+        }
+      });
+      ScrollTrigger.refresh();
+    }, 4000); /* 4 s gives all animations plenty of time to fire */
+  });
+
+})();
+</script>
+
 </body>
 </html>
