@@ -1,60 +1,91 @@
-# Onkar Khilari — Portfolio
+# ONKAR KHILARI — AI/ML & Full-Stack Developer Portfolio
 
-A production-quality single-file portfolio built exactly to the final approved design.
+My personal developer portfolio website, showcasing work across AI/ML, full-stack development, backend engineering, computer vision, and software testing and automation.
 
-**Live Demo:** https://onkar-khiari.engineerr.workers.dev
+## Live Demo
 
-## Setup
+[🌐 Live Demo](https://onkar-khiari.engineerr.workers.dev)
 
-### 1. Add Your Portrait
+## About the Portfolio
 
-Save your professional photograph (the one with the white/transparent background) as:
+This portfolio presents my skills, selected projects, engineering experience, technologies, and contact information in a responsive single-page website.
 
-```
-assets/portrait.png
-```
+## Tech Stack
 
-The image must be named `portrait.png` and placed in the `assets/` folder that already exists in this directory.
+- HTML5 and CSS3
+- JavaScript (ES6+)
+- Tailwind CSS via CDN
+- GSAP and ScrollTrigger
+- Google Fonts: Inter, JetBrains Mono, and Syne
+- Simple Icons CDN
 
-- Use a PNG with a white or transparent background for the cutout effect
-- Recommended: 600–800px wide
+## Key Features
 
-### 2. Add Your CV
+- Responsive portfolio design for desktop, tablet, and mobile
+- About section with education and engineering mindset details
+- Services and expertise accordion
+- Filterable skills and technology grid
+- Selected project showcase with interactive case-study modal
+- Contact form with client-side submission feedback
+- Resume/CV download
+- GitHub and LinkedIn profile links
+- Mobile navigation menu
+- Smooth section navigation, scroll progress, and back-to-top controls
 
-Place your CV file as:
+## Portfolio Sections
 
-```
-assets/Onkar_Khilari_CV.pdf
-```
+- **Hero** — Introduction, portrait, focus areas, and portfolio highlights
+- **About** — Education, competencies, and engineering mindset
+- **Services** — AI/ML, frontend, backend, databases, and testing expertise
+- **Projects** — Selected work with technologies and case-study details
+- **Skills** — Filterable tools and technologies across AI/ML, backend, DevOps, tools, and testing
+- **Contact** — Contact information, profile links, and contact form
 
-### 3. Open the Portfolio
+## Project Structure
 
-Simply open `index.html` in any modern browser. No build step, no server required.
-
-## Structure
-
-```
+```text
 Onkar-Khilari/
-├── index.html          ← Complete portfolio (single file)
+├── index.html
+├── index.js
+├── css/
+│   └── style.css
 ├── assets/
-│   ├── portrait.png    ← YOUR portrait (add this)
-│   └── Onkar_Khilari_CV.pdf  ← YOUR CV (add this)
+│   ├── black_white_logo.png
+│   ├── cream_black_logo.png
+│   ├── cream_black_logo-1.png
+│   ├── Onkar_Khilari_CV.pdf
+│   └── portrait.png
 └── README.md
 ```
 
-## Sections
+## Getting Started
 
-- **Header** — Fixed, backdrop blur, social links, mobile menu
-- **Hero** — Giant "ONKAR" bg text, portrait cutout, info card, stat cards, stroke role text
-- **About** — Education card, competency tags, engineering mindset
-- **Services** — Accordion: Frontend, Backend, AI/ML, Database, Testing
-- **Projects** — 5 cards with full case study modal
-- **Skills** — Filterable grid: AI/ML, Backend, DevOps, Tools, Testing
-- **Contact** — Info cards + contact form
-- **Footer** — Navigation, back-to-top, massive watermark
+This is a static HTML, CSS, and JavaScript project with no package manager or build step.
 
-## Customization
+1. Clone or download the repository.
+2. Open `index.html` in a modern web browser.
 
-Update these values in `index.html` to match your actual profiles:
-- GitHub: `https://github.com/OnkarKhilari`
-- LinkedIn: `https://linkedin.com/in/onkar-khilari`
+For a local static server, run the following from the repository root:
+
+```bash
+python -m http.server 5500
+```
+
+Then visit `http://localhost:5500`.
+
+## Deployment
+
+The portfolio is deployed online and available here:
+
+[🌐 Visit Live Portfolio](https://onkar-khiari.engineerr.workers.dev)
+
+## Author
+
+**Onkar Khilari**
+
+AI/ML & Full-Stack Developer
+
+## Connect With Me
+
+- [GitHub](https://github.com/khilarionkar05)
+- [LinkedIn](https://linkedin.com/in/onkar-khilari)
