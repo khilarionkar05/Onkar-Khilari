@@ -1,10 +1,23 @@
 ﻿<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onkar Khilari | AI/ML Engineer &amp; Full-Stack Developer</title>
 <meta name="description" content="Portfolio of Onkar Khilari - Full-Stack Developer and AI/ML Engineer crafting scalable web applications and intelligent systems.">
+
+<!-- Open Graph / LinkedIn -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Onkar Khilari | AI/ML Engineer & Full-Stack Developer">
+<meta property="og:description" content="Portfolio of Onkar Khilari - AI/ML Engineer and Full-Stack Developer building intelligent systems and production-ready applications.">
+<meta property="og:url" content="https://onkar-khilari.engineerr.workers.dev/">
+<meta property="og:image" content="https://onkar-khilari.engineerr.workers.dev/assets/cream_black_logo_fav.png">
+<meta property="og:image:alt" content="Onkar Khilari — AI/ML Engineer & Full-Stack Developer">
+<meta property="og:site_name" content="Onkar Khilari Portfolio">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Onkar Khilari | AI/ML Engineer & Full-Stack Developer">
+<meta name="twitter:description" content="Portfolio of Onkar Khilari - AI/ML Engineer and Full-Stack Developer building intelligent systems and production-ready applications.">
+<meta name="twitter:image" content="https://onkar-khilari.engineerr.workers.dev/assets/cream_black_logo_fav.png">
+
 <link rel="icon" type="image/png" sizes="32x32" href="assets/cream_black_logo_fav.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/cream_black_logo_fav.png">
 <link rel="shortcut icon" type="image/png" href="assets/cream_black_logo_fav.png">
@@ -65,6 +78,246 @@ tailwind.config = {
   ::-webkit-scrollbar-thumb:hover { background: #141413; }
   .service-body { display: block; height: 0; overflow: hidden; opacity: 0; }
   .service-body.open { height: auto; opacity: 1; }
+  /* ── Mobile responsive overrides ─────────────────────────────────────────
+     All rules below are scoped to max-width breakpoints.
+     Nothing here affects lg: (1024px+) desktop layout.
+  ───────────────────────────────────────────────────────────────────────── */
+
+  /* ── HERO: portrait height — fixed 680px collapses on small screens ── */
+  @media (max-width: 1023px) {
+    #hero-portrait {
+      height: 420px !important;
+    }
+  }
+  @media (max-width: 767px) {
+    #hero-portrait {
+      height: 340px !important;
+    }
+  }
+  @media (max-width: 479px) {
+    #hero-portrait {
+      height: 280px !important;
+    }
+  }
+  @media (max-width: 359px) {
+    #hero-portrait {
+      height: 240px !important;
+    }
+  }
+
+  /* ── HERO: stroke text — whitespace-nowrap causes horizontal overflow ── */
+  @media (max-width: 1023px) {
+    #home .stroke-text {
+      white-space: normal !important;
+      word-break: break-word !important;
+      font-size: clamp(1.5rem, 10vw, 3rem) !important;
+    }
+  }
+
+  /* ── HERO: ONKAR background text — scale to viewport safely ── */
+  @media (max-width: 1023px) {
+    #home h1 {
+      font-size: clamp(3.5rem, 20vw, 10rem) !important;
+    }
+  }
+
+  /* ── HERO: info card — full width on mobile, remove max-w-sm constraint ── */
+  @media (max-width: 1023px) {
+    #home .order-2.lg\\:order-1 .bg-white\\/95 {
+      max-width: 100% !important;
+    }
+  }
+
+  /* ── HERO: min-height — reduce so content isn't pushed offscreen ── */
+  @media (max-width: 767px) {
+    #home .grid.grid-cols-1 {
+      min-height: auto !important;
+    }
+  }
+
+  /* ── ABOUT: heading — responsive size ── */
+  @media (max-width: 767px) {
+    #about h2 {
+      font-size: clamp(1.6rem, 6vw, 2.5rem) !important;
+      line-height: 1.25 !important;
+    }
+  }
+
+  /* ── SERVICES: heading ── */
+  @media (max-width: 767px) {
+    #services h2 {
+      font-size: clamp(1.6rem, 6vw, 2.5rem) !important;
+    }
+  }
+
+  /* ── PROJECTS: heading ── */
+  @media (max-width: 767px) {
+    #projects h2 {
+      font-size: clamp(1.6rem, 6vw, 2.5rem) !important;
+    }
+  }
+
+  /* ── CONTACT: heading ── */
+  @media (max-width: 767px) {
+    #contact h2 {
+      font-size: clamp(2rem, 9vw, 3.5rem) !important;
+      line-height: 1.1 !important;
+    }
+  }
+
+  /* ── MODAL: constrain height on mobile so it doesn't exceed viewport ── */
+  @media (max-width: 767px) {
+    #case-study-modal .relative.w-full {
+      max-height: 90vh !important;
+      overflow-y: auto !important;
+    }
+    #case-study-modal .min-h-screen {
+      align-items: flex-end !important;
+      padding-bottom: 0 !important;
+    }
+    #case-study-modal .relative.w-full {
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+    /* Stack modal action buttons vertically */
+    #modal-content .flex.flex-wrap.items-center.justify-between {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    #modal-content .flex.flex-wrap.items-center.justify-between > div {
+      flex-direction: column !important;
+      width: 100% !important;
+    }
+    #modal-content .flex.flex-wrap.items-center.justify-between a {
+      text-align: center !important;
+      width: 100% !important;
+    }
+  }
+
+  /* ── FOOTER: watermark — overflow-hidden already set, but prevent scroll ── */
+  @media (max-width: 767px) {
+    footer .pt-12.text-center {
+      overflow: hidden !important;
+    }
+    footer h2 {
+      font-size: clamp(2rem, 13vw, 8rem) !important;
+    }
+  }
+
+  /* ── FOOTER: navigation row — stack on very small screens ── */
+  @media (max-width: 479px) {
+    footer .flex.flex-col.md\\:flex-row {
+      gap: 1.25rem !important;
+    }
+    footer .flex.flex-wrap.gap-4 {
+      gap: 0.5rem !important;
+    }
+  }
+
+  /* ── GLOBAL: prevent any element causing horizontal overflow ── */
+  @media (max-width: 1023px) {
+    body {
+      overflow-x: hidden !important;
+    }
+    /* Service cards — no horizontal translateX overflow on mobile */
+    .service-card {
+      overflow: hidden;
+    }
+  }
+
+  /* ── SKILLS: 2-col on mobile already set via Tailwind grid-cols-2.
+     Override to 1-col only on very narrow screens ── */
+  @media (max-width: 340px) {
+    #skills-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* ── CONTACT FORM: first-name / last-name grid — stack on mobile ── */
+  @media (max-width: 639px) {
+    #contact-form .grid.grid-cols-1.sm\\:grid-cols-2 {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* ── HEADER already handled by existing mobile-menu HTML — nothing needed here ── */
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     MOBILE HEADER — compact, balanced, three-item row
+     Scoped strictly to max-width:767px (below md:). Desktop unaffected.
+  ═══════════════════════════════════════════════════════════════════════ */
+  @media (max-width: 767px) {
+
+    /* Reduce header bar height from h-20 (80px) → 56px */
+    #site-header .max-w-\[1480px\] {
+      height: 56px !important;
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+    }
+
+    /* Logo image: 40px → 32px */
+    #site-header a.group img {
+      width: 32px !important;
+      height: 32px !important;
+      min-width: 32px !important;
+    }
+
+    /* Gap between logo img and text block: 12px → 8px */
+    #site-header a.group {
+      gap: 8px !important;
+    }
+
+    /* "ONKAR KHILARI" text: text-lg → 12px, tighter tracking */
+    #site-header a.group .flex.flex-col span:first-child {
+      font-size: 12px !important;
+      letter-spacing: -0.01em !important;
+      line-height: 1 !important;
+    }
+
+    /* Sub-label "AI/ML · Full-Stack": keep tiny */
+    #site-header a.group .flex.flex-col span:last-child {
+      font-size: 8.5px !important;
+      margin-top: 2px !important;
+    }
+
+    /* Download CV button: compact pill */
+    #site-header > div > div.flex a[download] {
+      padding: 7px 11px !important;
+      font-size: 9px !important;
+      letter-spacing: 0.06em !important;
+      white-space: nowrap !important;
+    }
+
+    /* Right-side flex group: tighten gap */
+    #site-header > div > div.flex {
+      gap: 8px !important;
+    }
+
+    /* Hamburger button: tighten padding */
+    #mobile-menu-btn {
+      padding: 6px !important;
+      width: 34px !important;
+      height: 34px !important;
+      flex-shrink: 0 !important;
+    }
+
+    #mobile-menu-btn svg {
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+
+  /* Extra-narrow (≤359px): shrink name text further */
+  @media (max-width: 359px) {
+    #site-header a.group .flex.flex-col span:first-child {
+      font-size: 10.5px !important;
+    }
+    #site-header > div > div.flex a[download] {
+      padding: 6px 8px !important;
+      font-size: 8px !important;
+      letter-spacing: 0.04em !important;
+    }
+  }
 </style>
 </head>
 <body class="bg-[#FAF7F2] text-[#141413] antialiased relative min-h-screen">
@@ -122,6 +375,7 @@ tailwind.config = {
     <a href="#services" class="mobile-link block px-3 py-2 rounded font-mono-code text-xs uppercase font-semibold text-neutral-800 hover:bg-black hover:text-white transition">03 // Services</a>
     <a href="#skills" class="mobile-link block px-3 py-2 rounded font-mono-code text-xs uppercase font-semibold text-neutral-800 hover:bg-black hover:text-white transition">04 // Skills</a>
     <a href="#contact" class="mobile-link block px-3 py-2 rounded font-mono-code text-xs uppercase font-semibold text-neutral-800 hover:bg-black hover:text-white transition">05 // Contact</a>
+    <a href="assets/Onkar_Khilari_CV.pdf" download class="mobile-link block px-3 py-2 rounded font-mono-code text-xs uppercase font-semibold bg-black text-white text-center transition mt-1">↓ Download CV</a>
   </div>
 </header>
 
