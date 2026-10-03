@@ -889,6 +889,8 @@ window.filterSkills = function (
    CONTACT FORM
    ========================================================= */
 
+let contactSubmitting = false;
+
 function initContactForm() {
 
     const form =
@@ -913,10 +915,32 @@ function initContactForm() {
 
 
 window.handleContactSubmit =
-    function (event) {
+    async function (event) {
 
         event.preventDefault();
 
+        const form =
+            event.currentTarget ||
+            document.getElementById(
+                "contact-form"
+            );
+
+        if (
+            !form ||
+            contactSubmitting
+        ) {
+
+            return;
+
+        }
+
+        if (!form.checkValidity()) {
+
+            form.reportValidity();
+
+            return;
+
+        }
 
         const button =
             document.getElementById(
@@ -940,14 +964,14 @@ window.handleContactSubmit =
 
         }
 
-
         if (buttonText) {
 
             buttonText.textContent =
-                "Transmitting...";
+                "Sending...";
 
         }
 
+        contactSubmitting = true;
 
         button.disabled = true;
 
@@ -956,18 +980,96 @@ window.handleContactSubmit =
             "opacity-75"
         );
 
+        if (feedback) {
 
-        setTimeout(() => {
+            feedback.classList.add(
+                "hidden"
+            );
 
-            if (buttonText) {
+            feedback.textContent =
+                "";
 
-                buttonText.textContent =
-                    "Message Delivered ✓";
+        }
+
+        const value = (id) => {
+
+            const field =
+                document.getElementById(id);
+
+            return field
+                ? field.value.trim()
+                : "";
+
+        };
+
+        const controller =
+            new AbortController();
+
+        const timeout =
+            window.setTimeout(
+                () => controller.abort(),
+                15000
+            );
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/contact",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                            "Accept":
+                                "application/json"
+                        },
+                        body: JSON.stringify({
+                            firstName:
+                                value("first-name"),
+                            lastName:
+                                value("last-name"),
+                            email:
+                                value("email"),
+                            subject:
+                                value("subject"),
+                            message:
+                                value("message")
+                        }),
+                        signal:
+                            controller.signal
+                    }
+                );
+
+            let result = {};
+
+            try {
+
+                result =
+                    await response.json();
+
+            } catch (error) {
+
+                result = {};
 
             }
 
+            if (
+                !response.ok ||
+                result.success !== true
+            ) {
+
+                throw new Error(
+                    result.error ||
+                    "Unable to send your message right now."
+                );
+
+            }
 
             if (feedback) {
+
+                feedback.textContent =
+                    "Message sent successfully. I'll get back to you soon.";
 
                 feedback.classList.remove(
                     "hidden"
@@ -975,41 +1077,50 @@ window.handleContactSubmit =
 
             }
 
+            form.reset();
 
-            const form =
-                document.getElementById(
-                    "contact-form"
+        } catch (error) {
+
+            if (feedback) {
+
+                feedback.textContent =
+                    "Unable to send your message right now. Please try again or contact me directly.";
+
+                feedback.classList.remove(
+                    "hidden"
                 );
-
-
-            if (form) {
-
-                form.reset();
 
             }
 
+            console.error(
+                "Contact form submission failed:",
+                error
+            );
 
-            setTimeout(() => {
+        } finally {
 
-                if (buttonText) {
+            window.clearTimeout(
+                timeout
+            );
 
-                    buttonText.textContent =
-                        "Submit Message";
+            contactSubmitting =
+                false;
 
-                }
+            button.disabled =
+                false;
 
+            button.classList.remove(
+                "opacity-75"
+            );
 
-                button.disabled =
-                    false;
+            if (buttonText) {
 
+                buttonText.textContent =
+                    "Submit Message";
 
-                button.classList.remove(
-                    "opacity-75"
-                );
+            }
 
-            }, 4000);
-
-        }, 1000);
+        }
 
     };
 

@@ -60,24 +60,36 @@ Onkar-Khilari/
 
 ## Getting Started
 
-This is a static HTML, CSS, and JavaScript project with no package manager or build step.
+This is a static HTML, CSS, and JavaScript project with a small Cloudflare Worker API for contact-form email delivery.
 
 1. Clone or download the repository.
-2. Open `index.html` in a modern web browser.
+2. Install Wrangler if needed: `npm install --global wrangler`.
+3. Configure the Worker environment variables described below.
+4. Run the project locally with Wrangler.
 
-For a local static server, run the following from the repository root:
+For local development, create a `.dev.vars` file from `.env.example`, replace the placeholder Resend sender and API key with local values, and run:
 
 ```bash
-python -m http.server 5500
+npx wrangler dev
 ```
 
-Then visit `http://localhost:5500`.
+Then visit the local URL shown by Wrangler.
 
 ## Deployment
 
-The portfolio is deployed online and available here:
+The portfolio is deployed online with Cloudflare Workers and available here:
 
 [🌐 Visit Live Portfolio](https://onkar-khiari.engineerr.workers.dev)
+
+Before deploying, configure the Resend sender and API key:
+
+```bash
+npx wrangler secret put RESEND_API_KEY
+npx wrangler secret put RESEND_FROM_EMAIL
+npx wrangler deploy
+```
+
+`RESEND_FROM_EMAIL` must be a sender address from a domain verified in Resend. `CONTACT_TO_EMAIL` is defined in `wrangler.toml` and defaults to `onkarkhilari17@gmail.com`.
 
 ## Author
 

@@ -1,0 +1,11 @@
+name = "onkar-khilari"
+main = "worker.js"
+compatibility_date = "2026-10-03"
+
+[assets]
+directory = "."
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+[vars]
+CONTACT_TO_EMAIL = "onkarkhilari17@gmail.com"
