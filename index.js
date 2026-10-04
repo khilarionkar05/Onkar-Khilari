@@ -1151,7 +1151,7 @@ window.handleContactSubmit =
 
             const response =
                 await fetch(
-                    "/api/contact",
+                    "https://api.web3forms.com/submit",
                     {
                         method: "POST",
                         headers: {
@@ -1161,16 +1161,20 @@ window.handleContactSubmit =
                                 "application/json"
                         },
                         body: JSON.stringify({
-                            firstName:
+                            access_key:
+                                "5017291f-16f6-4585-abe7-f453dd5344c5",
+                            first_name:
                                 value("first-name"),
-                            lastName:
+                            last_name:
                                 value("last-name"),
                             email:
                                 value("email"),
                             subject:
                                 value("subject"),
                             message:
-                                value("message")
+                                value("message"),
+                            replyto:
+                                value("email")
                         }),
                         signal:
                             controller.signal
@@ -1190,10 +1194,7 @@ window.handleContactSubmit =
 
             }
 
-            if (
-                !response.ok ||
-                result.success !== true
-            ) {
+            if (!response.ok || result.success !== true) {
 
                 throw new Error(
                     result.error ||
