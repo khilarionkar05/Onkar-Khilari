@@ -3105,8 +3105,50 @@ footer a {
     }
 
     .case-study-footer-close {
+        position:
+            static !important;
+
         width:
-            100%;
+            min(220px, calc(100% - 32px)) !important;
+
+        min-height:
+            48px !important;
+
+        height:
+            auto !important;
+
+        aspect-ratio:
+            auto !important;
+
+        margin:
+            20px auto 24px !important;
+
+        padding:
+            12px 20px !important;
+
+        border-radius:
+            10px !important;
+
+        display:
+            flex !important;
+
+        align-self:
+            center !important;
+
+        transform:
+            translateX(24px) !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        box-sizing:
+            border-box !important;
+
+        white-space:
+            nowrap !important;
     }
 
     #case-study-close {
@@ -3486,76 +3528,61 @@ footer a {
     }
 
 }
-/* =========================================================
-   MOBILE — CONTACT FORM COMPACT
-   ========================================================= */
+/* Final mobile contact sizing overrides */
+@media (max-width: 768px) {
 
-@media (max-width: 767px) {
+    #contact {
+        overflow-x: hidden !important;
+    }
 
-    /* Contact form card */
-    #contact .contact-form,
-    #contact .contact-card,
-    #contact form {
-        width: calc(100% - 32px) !important;
-        max-width: 320px !important;
+    #contact .lg\:col-span-7 > div {
+        width: 92% !important;
+        max-width: none !important;
         margin-left: auto !important;
         margin-right: auto !important;
-        padding: 20px !important;
+        padding: 18px !important;
         box-sizing: border-box !important;
-        border-radius: 20px !important;
     }
 
-    /* Form groups */
-    #contact form > div,
-    #contact .form-group {
-        margin-bottom: 14px !important;
+    #contact form {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
-    /* Labels */
+    #contact form > * + * {
+        margin-top: 20px !important;
+    }
+
+    #contact form > .grid {
+        gap: 20px !important;
+    }
+
     #contact label {
-        display: block !important;
-        font-size: 10px !important;
-        line-height: 1.2 !important;
-        margin-bottom: 7px !important;
-        letter-spacing: 0.08em !important;
+        font-size: 13px !important;
+        margin-bottom: 9px !important;
     }
 
-    /* Inputs */
-    #contact input {
-        width: 100% !important;
-        height: 42px !important;
-        min-height: 42px !important;
-        padding: 10px 12px !important;
-        font-size: 12px !important;
-        border-radius: 10px !important;
-        box-sizing: border-box !important;
+    #contact input.form-input {
+        height: 50px !important;
+        min-height: 50px !important;
+        padding: 12px 14px !important;
+        font-size: 13px !important;
     }
 
-    /* Textarea */
-    #contact textarea {
-        width: 100% !important;
-        height: 100px !important;
-        min-height: 100px !important;
-        padding: 12px !important;
-        font-size: 12px !important;
-        line-height: 1.4 !important;
-        border-radius: 10px !important;
-        box-sizing: border-box !important;
-        resize: vertical !important;
+    #contact textarea.form-input {
+        height: 130px !important;
+        min-height: 130px !important;
+        padding: 12px 14px !important;
+        font-size: 13px !important;
     }
 
-    /* Submit button */
-    #contact button,
-    #contact input[type="submit"] {
-        width: 100% !important;
-        height: 48px !important;
-        min-height: 48px !important;
-        padding: 10px 14px !important;
-        margin-top: 4px !important;
-        font-size: 11px !important;
-        border-radius: 11px !important;
+    #contact #submit-btn {
+        height: 52px !important;
+        min-height: 52px !important;
+        margin-top: 0 !important;
     }
-
 }
 /* =========================================================
    MOBILE FOOTER — FORCE LEFT CONTENT + RIGHT TOP BUTTON
