@@ -1,0 +1,19 @@
+.git/
+.wrangler/
+
+# Local development and environment files
+.env
+.env.*
+.dev.vars
+.dev.vars.*
+
+# Repository and deployment configuration
+README.md
+worker.js
+wrangler.toml
+.gitignore
+.wranglerignore
+.assetsignore
+
+# Dependency and tooling directories
+node_modules/

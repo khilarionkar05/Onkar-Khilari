@@ -1,0 +1,13 @@
+.git/
+.wrangler/
+node_modules/
+.env
+.env.*
+.env.example
+.dev.vars
+.dev.vars.*
+README.md
+worker.js
+wrangler.toml
+.gitignore
+.wranglerignore
