@@ -3688,3 +3688,28 @@ footer a {
     }
 
 }
+
+/* =========================================
+   MOBILE — ONKAR NAME ONLY
+   ========================================= */
+@media (max-width: 767px) {
+
+  .hero-title {
+    font-size: 58px !important;
+    line-height: 0.9 !important;
+
+    /* Move ONKAR left/right */
+    transform: translateX(-5px) !important;
+
+    /* Control spacing */
+    margin-left: 5px !important;
+    padding: 0 !important;
+
+    /* Prevent unwanted wrapping */
+    white-space: nowrap !important;
+
+    /* Keep the name centered relative to its wrapper */
+    width: max-content !important;
+  }
+
+}
