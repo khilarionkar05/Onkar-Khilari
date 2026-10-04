@@ -898,6 +898,27 @@ function initBackToTop() {
    SKILLS FILTER
    ========================================================= */
 
+function initSkillsFilter() {
+    const filter = document.getElementById("skills-filter");
+
+    if (!filter) {
+        return;
+    }
+
+    filter.querySelectorAll(".skill-tab").forEach((button) => {
+        button.setAttribute(
+            "aria-pressed",
+            button.dataset.category === "all" ? "true" : "false"
+        );
+
+        button.addEventListener("click", () => {
+            filterSkills(button.dataset.category || "all");
+        });
+    });
+
+    filterSkills("all");
+}
+
 window.filterSkills = function (
     category
 ) {
@@ -914,6 +935,15 @@ window.filterSkills = function (
             button.dataset.category ===
             category;
 
+        button.classList.toggle(
+            "active",
+            isActive
+        );
+
+        button.setAttribute(
+            "aria-pressed",
+            String(isActive)
+        );
 
         button.classList.toggle(
             "bg-black",
@@ -961,11 +991,17 @@ window.filterSkills = function (
 
 
     items.forEach((item) => {
+        const categories =
+            (item.dataset.category || "")
+                .split(/\s+/)
+                .filter(Boolean);
+
+        const matchesCategory =
+            category === "all" ||
+            categories.includes(category);
 
         if (
-            category === "all" ||
-            item.dataset.category ===
-                category
+            matchesCategory
         ) {
 
             item.classList.remove(
