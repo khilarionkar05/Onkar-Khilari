@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initServiceAccordion();
 
+    initProjectCards();
+
     initBackToTop();
 
     initContactForm();
@@ -541,212 +543,160 @@ function initMobileViewport() {
    SERVICES ACCORDION
    ========================================================= */
 
-/*
- * Your HTML uses:
- *
- * onclick="toggleService(1)"
- *
- * id="service-body-1"
- *
- * id="arrow-1"
- *
- * Therefore toggleService MUST be global.
- */
+function initServiceAccordion() {
 
-let openService = null;
+    const cards = document.querySelectorAll(".service-card");
 
+    cards.forEach((card) => {
+        const header = card.querySelector(".service-header");
+        const body = card.querySelector(".service-body");
 
-window.toggleService = function (id) {
-
-    const body =
-        document.getElementById(
-            "service-body-" + id
-        );
-
-
-    /*
-     * Support both arrow styles.
-     */
-
-    const arrow =
-        document.getElementById(
-            "arrow-" + id
-        ) ||
-        document.querySelector(
-            ".service-arrow-" + id
-        );
-
-
-    if (!body) {
-
-        console.warn(
-            "Service body not found:",
-            id
-        );
-
-        return;
-
-    }
-
-
-    const isOpen =
-        body.classList.contains("open") ||
-        !body.classList.contains("hidden");
-
-
-    /*
-     * Close every other service.
-     */
-
-    document.querySelectorAll(
-        '[id^="service-body-"]'
-    ).forEach((otherBody) => {
-
-        if (
-            otherBody !== body
-        ) {
-
-            otherBody.classList.add(
-                "hidden"
-            );
-
-            otherBody.classList.remove(
-                "open"
-            );
-
-            otherBody.style.maxHeight =
-                "";
-
+        if (!header || !body) {
+            return;
         }
 
+        const setExpanded = (expanded) => {
+            card.classList.toggle("active", expanded);
+            card.setAttribute("aria-expanded", String(expanded));
+            header.setAttribute("aria-expanded", String(expanded));
+        };
+
+        setExpanded(false);
+
+        const toggle = () => {
+            const expanded =
+                header.getAttribute("aria-expanded") === "true";
+
+            cards.forEach((otherCard) => {
+                if (otherCard !== card) {
+                    const otherHeader =
+                        otherCard.querySelector(".service-header");
+
+                    if (otherHeader) {
+                        otherCard.classList.remove("active");
+                        otherCard.setAttribute("aria-expanded", "false");
+                        otherHeader.setAttribute("aria-expanded", "false");
+                    }
+                }
+            });
+
+            setExpanded(!expanded);
+        };
+
+        header.addEventListener("click", toggle);
+        header.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                toggle();
+            }
+        });
     });
 
-
-    /*
-     * Reset all arrows.
-     */
-
-    document.querySelectorAll(
-        ".service-arrow, [class*='service-arrow-'], [id^='arrow-']"
-    ).forEach((otherArrow) => {
-
-        if (
-            otherArrow !== arrow
-        ) {
-
-            otherArrow.style.transform =
-                "";
-
-        }
-
-    });
-
-
-    /*
-     * CLOSE
-     */
-
-    if (isOpen) {
-
-        body.classList.add(
-            "hidden"
-        );
-
-        body.classList.remove(
-            "open"
-        );
-
-        body.style.maxHeight =
-            "";
-
-        if (arrow) {
-
-            arrow.style.transform =
-                "";
-
-        }
-
-        openService = null;
-
-        return;
-
-    }
-
-
-    /*
-     * OPEN
-     */
-
-    body.classList.remove(
-        "hidden"
-    );
-
-    body.classList.add(
-        "open"
-    );
-
-    body.style.maxHeight =
-        body.scrollHeight + "px";
-
-
-    if (arrow) {
-
-        arrow.style.transform =
-            "rotate(180deg)";
-
-    }
-
-
-    openService = id;
-
-};
+}
 
 
 /* =========================================================
-   SERVICE ACCORDION INITIALIZATION
+   PROJECT CASE STUDY MODALS
    ========================================================= */
 
-function initServiceAccordion() {
+function initProjectCards() {
+    const container = document.querySelector("#projects .grid");
+    const modal = document.getElementById("case-study-modal");
+    const modalContent = document.getElementById("modal-content");
+    const closeButton = document.getElementById("case-study-close");
 
-    /*
-     * Your service cards already use:
-     *
-     * onclick="toggleService(ID)"
-     *
-     * So we do NOT attach another click
-     * listener to the entire card.
-     *
-     * This prevents double-toggle problems.
-     */
+    if (!container || !modal || !modalContent || !closeButton) {
+        return;
+    }
 
+    const cards = container.querySelectorAll(".project-card");
+    let lastFocusedElement = null;
 
-    const serviceBodies =
-        document.querySelectorAll(
-            '[id^="service-body-"]'
-        );
+    const closeModal = () => {
+        modal.classList.add("hidden");
+        document.body.classList.remove("modal-open");
+        modalContent.replaceChildren();
 
+        if (lastFocusedElement) {
+            lastFocusedElement.focus();
+            lastFocusedElement = null;
+        }
+    };
 
-    serviceBodies.forEach((body) => {
+    const openModal = (card) => {
+        const title = card.querySelector("h3");
+        const clone = card.cloneNode(true);
+        const action = clone.querySelector(".project-case-study-link");
 
-        /*
-         * Start closed if HTML has
-         * hidden class.
-         */
-
-        if (
-            body.classList.contains(
-                "hidden"
-            )
-        ) {
-
-            body.classList.remove(
-                "open"
-            );
-
+        if (action) {
+            action.remove();
         }
 
+        modalContent.replaceChildren();
+        if (title) {
+            const heading = document.createElement("h2");
+            heading.className = title.className;
+            heading.textContent = title.textContent;
+            modalContent.appendChild(heading);
+        }
+        modalContent.appendChild(clone);
+        modal.classList.remove("hidden");
+        document.body.classList.add("modal-open");
+        closeButton.focus();
+    };
+
+    cards.forEach((card) => {
+        card.setAttribute("role", "button");
+        card.setAttribute("tabindex", "0");
+
+        card.addEventListener("click", (event) => {
+            if (event.target.closest("a, button")) {
+                return;
+            }
+
+            lastFocusedElement = card;
+            openModal(card);
+        });
+
+        card.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                lastFocusedElement = card;
+                openModal(card);
+            }
+        });
     });
 
+    container.querySelectorAll(".project-case-study-link").forEach((link) => {
+        link.addEventListener("click", (event) => {
+            event.stopPropagation();
+            lastFocusedElement = link;
+            openModal(link.closest(".project-card"));
+        });
+
+        link.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                event.stopPropagation();
+                lastFocusedElement = link;
+                openModal(link.closest(".project-card"));
+            }
+        });
+    });
+
+    closeButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.classList.contains("hidden")) {
+            closeModal();
+        }
+    });
 }
 
 
