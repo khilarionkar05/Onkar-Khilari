@@ -2,11 +2,15 @@
 
 My personal developer portfolio website, showcasing work across AI/ML, full-stack development, backend engineering, computer vision, and software testing and automation.
 
+
 ## Live Demo
+
 
 [🌐 Live Demo](https://onkar-khiari.engineerr.workers.dev)
 
+
 ## About the Portfolio
+
 
 This portfolio presents my skills, selected projects, engineering experience, technologies, and contact information in a responsive single-page website.
 
